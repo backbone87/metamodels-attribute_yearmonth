@@ -186,7 +186,7 @@ class MetaModelAttributeYearMonth extends MetaModelAttributeHybrid {
 		$arrMonth['reference'] = array_combine(range(1, 12), array_values($GLOBALS['TL_LANG']['MONTHS']));
 		$arrOverrides['mandatory'] && $arrMonth['eval']['mandatory'] = true;
 		$arrOverrides['includeBlankOption'] && $arrMonth['eval']['includeBlankOption'] = true;
-		$arrYear['eval']['tl_class'] = 'w50';
+		$arrMonth['eval']['tl_class'] = 'w50';
 		return array_merge($arrMonth, (array) $GLOBALS['TL_DCA'][$tableName]['fields'][$columnName . '__month']);
 	}
 
