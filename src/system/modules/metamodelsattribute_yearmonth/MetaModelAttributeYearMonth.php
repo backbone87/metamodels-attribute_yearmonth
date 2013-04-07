@@ -144,14 +144,15 @@ class MetaModelAttributeYearMonth extends MetaModelAttributeHybrid {
 
 	public function getItemDCA($arrOverrides = array()) {
 		$tableName = $this->getMetaModel()->getTableName();
+		$columnName = $this->getColName();
 		$yearColumnName = $this->getYearColumnName();
 		$monthColumnName = $this->getMonthColumnName();
 
 		$arrReturn['fields'][$yearColumnName] = $this->getYearFieldDefinition();
 		$arrReturn['fields'][$monthColumnName] = $this->getMonthFieldDefinition();
 
-		$arrOverrides['sortable'] && $arrReturn['list']['sorting']['fields'][]
-			= $yearColumnName . ', ' . $monthColumnName;
+		$arrOverrides['flag'] && $arrReturn['fields'][$columnName]['flag'] = $arrOverrides['flag'];
+		$arrOverrides['sortable'] && $arrReturn['list']['sorting']['fields'][] = $columnName;
 
 		$this->itemDCACalled = true;
 		return $arrReturn;
