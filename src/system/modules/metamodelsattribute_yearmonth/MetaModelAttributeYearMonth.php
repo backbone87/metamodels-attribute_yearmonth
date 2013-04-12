@@ -148,8 +148,8 @@ class MetaModelAttributeYearMonth extends MetaModelAttributeHybrid {
 		$yearColumnName = $this->getYearColumnName();
 		$monthColumnName = $this->getMonthColumnName();
 
-		$arrReturn['fields'][$yearColumnName] = $this->getYearFieldDefinition();
-		$arrReturn['fields'][$monthColumnName] = $this->getMonthFieldDefinition();
+		$arrReturn['fields'][$yearColumnName] = $this->getYearFieldDefinition($arrOverrides);
+		$arrReturn['fields'][$monthColumnName] = $this->getMonthFieldDefinition($arrOverrides);
 
 		$arrOverrides['flag'] && $arrReturn['fields'][$columnName]['flag'] = $arrOverrides['flag'];
 		$arrOverrides['sortable'] && $arrReturn['list']['sorting']['fields'][] = $columnName;
@@ -166,7 +166,7 @@ class MetaModelAttributeYearMonth extends MetaModelAttributeHybrid {
 		return $this->getColName() . '__month';
 	}
 
-	public function getYearFieldDefinition() {
+	public function getYearFieldDefinition(array $arrOverrides = array()) {
 		$arrYear['label'][0] = $this->getLangValue($this->get('name')) . ' ' . $GLOBALS['TL_LANG']['MSC']['year'];
 		$arrYear['label'][1] = $this->getLangValue($this->get('description'));
 		$arrYear['inputType'] = 'text';
@@ -178,7 +178,7 @@ class MetaModelAttributeYearMonth extends MetaModelAttributeHybrid {
 		return array_merge($arrYear, (array) $GLOBALS['TL_DCA'][$tableName]['fields'][$columnName . '__year']);
 	}
 
-	public function getMonthFieldDefinition() {
+	public function getMonthFieldDefinition(array $arrOverrides = array()) {
 		$arrMonth['label'][0] = $this->getLangValue($this->get('name')) . ' ' . $GLOBALS['TL_LANG']['MSC']['month'];
 		$arrMonth['label'][1] = $this->getLangValue($this->get('description'));
 		$arrMonth['inputType'] = 'select';
