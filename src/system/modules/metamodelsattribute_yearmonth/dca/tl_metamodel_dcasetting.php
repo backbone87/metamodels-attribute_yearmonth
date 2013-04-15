@@ -20,7 +20,7 @@ $GLOBALS['TL_DCA']['tl_metamodel_dcasetting']['metasubselectpalettes']['attr_id'
 		'includeBlankOption',
 	),
 	'overview' => array(
-// 		'filterable',
+		'filterable',
 // 		'searchable',
 		'sortable',
 		'flag',

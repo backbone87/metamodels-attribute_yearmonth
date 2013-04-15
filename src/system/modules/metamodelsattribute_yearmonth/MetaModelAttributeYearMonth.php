@@ -105,7 +105,7 @@ class MetaModelAttributeYearMonth extends MetaModelAttributeHybrid {
 
 	public function getAttributeSettingNames() {
 		return array_merge(parent::getAttributeSettingNames(), array(
-// 			'filterable',
+			'filterable',
 // 			'searchable',
 			'sortable',
 			'flag',
@@ -148,11 +148,13 @@ class MetaModelAttributeYearMonth extends MetaModelAttributeHybrid {
 		$yearColumnName = $this->getYearColumnName();
 		$monthColumnName = $this->getMonthColumnName();
 
+		$arrReturn['fields'][$columnName] = $this->getVirtualFieldDefinition($arrOverrides);
 		$arrReturn['fields'][$yearColumnName] = $this->getYearFieldDefinition($arrOverrides);
 		$arrReturn['fields'][$monthColumnName] = $this->getMonthFieldDefinition($arrOverrides);
 
-		$arrOverrides['flag'] && $arrReturn['fields'][$columnName]['flag'] = $arrOverrides['flag'];
-		$arrOverrides['sortable'] && $arrReturn['list']['sorting']['fields'][] = $columnName;
+		if($arrOverrides['sortable']) {
+			$arrReturn['list']['sorting']['fields'][] = $columnName;
+		}
 
 		$this->itemDCACalled = true;
 		return $arrReturn;
@@ -166,7 +168,21 @@ class MetaModelAttributeYearMonth extends MetaModelAttributeHybrid {
 		return $this->getColName() . '__month';
 	}
 
+	public function getVirtualFieldDefinition(array $overrides = array()) {
+		$tableName = $this->getMetaModel()->getTableName();
+		$columnName = $this->getColName();
+		$virtual['label'][0] = $this->getLangValue($this->get('name'));
+		$virtual['label'][1] = $this->getLangValue($this->get('description'));
+		if($overrides['sortable']) {
+			$virtual['sorting'] = true;
+			$overrides['flag'] && $virtual['flag'] = $overrides['flag'];
+		}
+		return array_merge($virtual, (array) $GLOBALS['TL_DCA'][$tableName]['fields'][$columnName]);
+	}
+
 	public function getYearFieldDefinition(array $arrOverrides = array()) {
+		$tableName = $this->getMetaModel()->getTableName();
+		$columnName = $this->getColName();
 		$arrYear['label'][0] = $this->getLangValue($this->get('name')) . ' ' . $GLOBALS['TL_LANG']['MSC']['year'];
 		$arrYear['label'][1] = $this->getLangValue($this->get('description'));
 		$arrYear['inputType'] = 'text';
@@ -175,10 +191,13 @@ class MetaModelAttributeYearMonth extends MetaModelAttributeHybrid {
 		$arrOverrides['mandatory'] && $arrYear['eval']['mandatory'] = true;
 		$arrYear['eval']['rgxp'] = 'digit';
 		$arrYear['eval']['tl_class'] = 'clr w50';
+		$arrOverrides['filterable'] && $arrYear['filter'] = true;
 		return array_merge($arrYear, (array) $GLOBALS['TL_DCA'][$tableName]['fields'][$columnName . '__year']);
 	}
 
 	public function getMonthFieldDefinition(array $arrOverrides = array()) {
+		$tableName = $this->getMetaModel()->getTableName();
+		$columnName = $this->getColName();
 		$arrMonth['label'][0] = $this->getLangValue($this->get('name')) . ' ' . $GLOBALS['TL_LANG']['MSC']['month'];
 		$arrMonth['label'][1] = $this->getLangValue($this->get('description'));
 		$arrMonth['inputType'] = 'select';
@@ -188,6 +207,7 @@ class MetaModelAttributeYearMonth extends MetaModelAttributeHybrid {
 		$arrOverrides['mandatory'] && $arrMonth['eval']['mandatory'] = true;
 		$arrOverrides['includeBlankOption'] && $arrMonth['eval']['includeBlankOption'] = true;
 		$arrMonth['eval']['tl_class'] = 'w50';
+		$arrOverrides['filterable'] && $arrMonth['filter'] = true;
 		return array_merge($arrMonth, (array) $GLOBALS['TL_DCA'][$tableName]['fields'][$columnName . '__month']);
 	}
 
